@@ -1,0 +1,11 @@
+1. server side:
+
+cd test
+python dispatcher.py
+
+
+2. client side:
+
+cd test
+python client.py
+
