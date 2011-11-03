@@ -54,13 +54,13 @@ int main (void)
 
     printf("send Hello to server\n");
 
-    do {
+    while (1){
         zmq_msg_t reply;
         zmq_msg_init (&reply);
 
         printf ("start Received msg: \n");
 
-        zmq_recv (requester, &reply, 0);
+        zmq_recv (requester, &reply, ZMQ_NOBLOCK);
         out = (char*)zmq_msg_data(&reply);
         printf ("Received msg: %s\n", out);
 
@@ -68,7 +68,8 @@ int main (void)
 
         zmq_msg_close (&reply);
 
-    } while (more);
+        sleep(1);
+    }
 
     zmq_close (requester);
     zmq_term (context);
