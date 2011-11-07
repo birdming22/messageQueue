@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-
+/*
 static char * s_recv (void *socket) {
     zmq_msg_t message;
     zmq_msg_init (&message);
@@ -20,6 +20,7 @@ static char * s_recv (void *socket) {
     string [size] = 0;
     return (string);
 }
+*/
 
 int main (void)
 {
@@ -58,13 +59,15 @@ int main (void)
         zmq_msg_t reply;
         zmq_msg_init (&reply);
 
-        printf ("start Received msg: \n");
+        //zmq_recv (requester, &reply, ZMQ_NOBLOCK);
+        zmq_recv (requester, &reply, 0);
 
-        zmq_recv (requester, &reply, ZMQ_NOBLOCK);
         out = (char*)zmq_msg_data(&reply);
-        printf ("Received msg: %s\n", out);
+        if (strlen(out) > 0) {
+            printf ("Received msg: %s\n", out);
+        }
 
-        zmq_getsockopt (requester, ZMQ_RCVMORE, &more, &more_size);
+        //zmq_getsockopt (requester, ZMQ_RCVMORE, &more, &more_size);
 
         zmq_msg_close (&reply);
 

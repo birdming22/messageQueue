@@ -40,63 +40,54 @@ int main (void)
 
     char* out;
 
-    zmq_msg_t zmq_id;
-    zmq_msg_t client_id;
-    zmq_msg_t request;
-
-    zmq_msg_init (&zmq_id);
-    zmq_msg_init (&client_id);
-    zmq_msg_init (&request);
-
-    zmq_recv (responder, &zmq_id, 0);
-    out = (char*)zmq_msg_data(&zmq_id);
-    printf ("Received %s\n", out);
-
-    zmq_recv (responder, &client_id, 0);
-    out = (char*)zmq_msg_data(&client_id);
-    printf ("Received %s\n", out);
-
-    // fixme
-    int int_client_id = atoi(out);
-    mapping[int_client_id] = zmq_id;
-
-    zmq_recv (responder, &request, 0);
-    out = (char*)zmq_msg_data(&request);
-    printf ("Received %s\n", out);
-
-    zmq_send (responder, get_zmq_id(int_client_id), ZMQ_SNDMORE);
-    zmq_msg_t reply;
-    zmq_msg_init_size (&reply, 5);
-    memcpy (zmq_msg_data (&reply), "World", 5);
-
-    zmq_send (responder, &reply, 0);
-
-    zmq_msg_close (&reply);
-
-    printf("Send data to client...\n");
-
-/*
     while (1) {
+
+        zmq_msg_t zmq_id;
+        zmq_msg_t client_id;
+        zmq_msg_t request;
+
+        zmq_msg_init (&zmq_id);
+        zmq_msg_init (&client_id);
+        zmq_msg_init (&request);
+
+        zmq_recv (responder, &zmq_id, 0);
+        out = (char*)zmq_msg_data(&zmq_id);
+        printf ("Received %s\n", out);
+
+        zmq_recv (responder, &client_id, 0);
+        out = (char*)zmq_msg_data(&client_id);
+        printf ("Received %s\n", out);
+
+        // fixme
+        int int_client_id = atoi(out);
+        mapping[int_client_id] = zmq_id;
+
+        zmq_recv (responder, &request, 0);
+        out = (char*)zmq_msg_data(&request);
+        printf ("Received %s\n", out);
+
+
         //  Do some 'work'
         sleep (1);
 
         printf("send to client id: %d\n", int_client_id);
 
+        zmq_send (responder, get_zmq_id(int_client_id), ZMQ_SNDMORE);
         zmq_msg_t reply;
         zmq_msg_init_size (&reply, 5);
         memcpy (zmq_msg_data (&reply), "World", 5);
 
-        zmq_send (responder, &reply, ZMQ_SNDMORE);
+        zmq_send (responder, &reply, 0);
 
         zmq_msg_close (&reply);
 
         printf("Send data to client...\n");
-    }
-*/
 
-    zmq_msg_close (&request);
-    zmq_msg_close (&client_id);
-    zmq_msg_close (&zmq_id);
+        zmq_msg_close (&request);
+        zmq_msg_close (&client_id);
+        zmq_msg_close (&zmq_id);
+    }
+
     //  We never get here but if we did, this would be how we end
     zmq_close (responder);
     zmq_term (context);
