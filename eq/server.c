@@ -79,10 +79,18 @@ int main (void)
 
         zmq_send (responder, &reply, 0);
 
-        zmq_msg_close (&reply);
+        printf("Send data to client...\n");
+
+        sleep(5);
+
+        printf("send to client id: %d\n", int_client_id);
+
+        zmq_send (responder, get_zmq_id(int_client_id), ZMQ_SNDMORE);
+        zmq_send (responder, &reply, 0);
 
         printf("Send data to client...\n");
 
+        zmq_msg_close (&reply);
         zmq_msg_close (&request);
         zmq_msg_close (&client_id);
         zmq_msg_close (&zmq_id);
